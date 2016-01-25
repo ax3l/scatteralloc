@@ -27,6 +27,23 @@ if(NOT ${CUDA_OPTIMIZATION_TYPE} STREQUAL  "unset")
 endif()
 
 
+################################################################################
+# C++11 Enabler
+################################################################################
+
+if("${CMAKE_CXX_FLAGS}" MATCHES "-std=c\\+\\+11")
+  if(CUDA_VERSION VERSION_LESS 6.5)
+    # host side C++11 support only
+    string(REPLACE "-std=c++11" ""
+           CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS}")
+    list(APPEND CUDA_NVCC_FLAGS "-Xcompiler -std=c++11")
+  else()
+    # full C++11 support
+    list(APPEND CUDA_NVCC_FLAGS -std=c++11)
+  endif()
+endif()
+
+
 ###############################################################################
 # Boost
 ###############################################################################
